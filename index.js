@@ -40,40 +40,27 @@ let isRotating = true;
             airplan.style.animationPlayState = currentState;
         }
 
-        // Automatically speaking numbers 1 to 1000 in Vietnamese
-        function speakNumbers() {
-            let number = 1;  // Start from 1
-            const interval = 2000;  // 2 seconds interval for slow speech
+    document.getElementById('speakButton').addEventListener('click', function() {
+    const speed = document.getElementById('speed').value;
+    const distance = document.getElementById('distance').value;
+    const message = `Tốc độ hiện tại là ${speed} mét trên giây và khoảng cách là ${distance} mét.`;
+    
+    // Check if speech synthesis is supported
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(message);
+        
+        // Set the language to Vietnamese
+        utterance.lang = 'vi-VN'; 
 
-            function speak() {
-                if (number <= 1000) {
-                    const utterance = new SpeechSynthesisUtterance(number.toString());
-                    utterance.lang = 'vi-VN';  // Set language (Vietnamese)
-
-                    // Slow down the speech rate (normal is 1)
-                    utterance.pitch = 1;
-                    utterance.rate = 0.8;  // Slower rate
-                    utterance.volume = 1;  // Full volume
-
-                    window.speechSynthesis.speak(utterance);
-
-                    // Increment the number after the speech has finished
-                    number++;
-                } else {
-                    console.log("Finished speaking up to 1000.");
-                }
-            }
-
-            // Use setInterval to speak each number at regular intervals
-            const intervalID = setInterval(() => {
-                speak();
-                if (number > 1000) {
-                    clearInterval(intervalID);  // Stop when we reach 1000
-                }
-            }, interval);
+        // Optionally, set the voice to a Vietnamese voice if available
+        const voices = speechSynthesis.getVoices();
+        const vietnameseVoice = voices.find(voice => voice.lang === 'vi-VN');
+        if (vietnameseVoice) {
+            utterance.voice = vietnameseVoice;
         }
 
-        // Automatically trigger speakNumbers when the page has finished loading
-        window.onload = function() {
-            speakNumbers();
-        };
+        speechSynthesis.speak(utterance);
+    } else {
+        alert('Speech synthesis is not supported in this browser.');
+    }
+});
