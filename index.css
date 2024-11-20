@@ -1,1 +1,196 @@
 
+#clock {
+            width: 800px;
+            height: 800px;
+            border: 1px solid #333;
+            border-radius: 50%;
+            position: relative;
+            background-image: url(./face.png);
+            background-size: cover;
+            /* Adjusts the background image to cover the entire div */
+            background-repeat: no-repeat;
+            /* Prevents the background image from repeating */
+            background-position: center;
+            /* Centers the background image */
+        }
+
+        #center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background-color: #c50000;
+            border-radius: 50%;
+            z-index: 5;
+        }
+
+        #secondHand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0% 0%;
+            background-image: url(./arrow.png);
+            background-size: cover;
+            /* Adjusts the background image to cover the entire div */
+            background-repeat: no-repeat;
+            /* Prevents the background image from repeating */
+            background-position: center;
+            /* Centers the background image */
+            width: 3px;
+            height: 43%;
+            transition: transform 0.5s cubic-bezier(0.42, 0, 0.58, 1);
+            animation: rotateSeconds 60s linear infinite;
+        }
+
+        @keyframes rotateSeconds {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #airplan {
+            width: 40px;
+            z-index: 5;
+            height: 40px;
+            position: absolute;
+            transform-origin: 0% 0%;
+            top: calc(50%);
+            left: calc(50%);
+            background-image: url(./air.png);
+            background-size: cover;
+            /* Adjusts the background image to cover the entire div */
+            background-repeat: no-repeat;
+            /* Prevents the background image from repeating */
+            background-position: center;
+            /* Centers the background image */
+            transition: transform 0.5s cubic-bezier(0.42, 0, 0.58, 1);
+            animation: moveAround 60s linear infinite;
+        }
+
+        @keyframes moveAround {
+            from {
+                transform: rotate(95deg) translate(400px) rotate(-140deg);
+            }
+
+            to {
+                transform: rotate(455deg) translate(400px) rotate(-140deg);
+            }
+        }
+
+        #stopButton {
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #c50000;
+            border-radius: 50%;
+            width: 250px;
+            height: 250px;
+            border: none;
+            color: white;
+            font-size: 60px;
+        }
+
+        #speed-up {
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: gray;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            border: none;
+            color: white;
+            font-size: 80px;
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-top: 100px;
+        }
+
+        #speed-down {
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: green;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            border: none;
+            color: white;
+            font-size: 80px;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 100px;
+        }
+
+        .container-zone {
+            justify-content: center;
+            margin-top: 80px;
+            margin-left: 30px;
+            /* display: inline-flex; */
+        }
+
+        .button-zone {
+            justify-content: center;
+            display: flex;
+            align-content: center;
+            width: 100%;
+        }
+
+        .clock-zone {
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            align-content: center;
+        }
+
+        #userInput {
+            margin-top: 30px;
+            font-size: 30px;
+        }
+
+        .save-speed {
+            font-size: 30px;
+            color: white;
+            background-color: green;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .text-zone {
+            font-size: 30px;
+            justify-content: center;
+            margin-top: 30px;
+            display: inline-flex;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .one-field {
+            width: 50%;
+            font-size: 40px;
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            justify-content: center;
+            line-height: 2.0;
+        }
+
+        .text-window {
+            width: 120px;
+            height: 80px;
+            margin-left: 10px;
+            margin-right: 10px;
+            border: solid black 2px;
+            font-size: 40px;
+            border-radius: 10px;
+        }
+
+        .speed-number {
+            color: red;
+            font-weight: 600;
+            font-size: 40px;
+        }
