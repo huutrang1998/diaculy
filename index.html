@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Dia Cu Ly</title>
+    <style>
+        #clock {
+            width: 800px;
+            height: 800px;
+            border: 1px solid #333;
+            border-radius: 50%;
+            position: relative;
+            background-image: url(./face.png);
+            background-size: cover;
+            /* Adjusts the background image to cover the entire div */
+            background-repeat: no-repeat;
+            /* Prevents the background image from repeating */
+            background-position: center;
+            /* Centers the background image */
+        }
+
+        #center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background-color: #c50000;
+            border-radius: 50%;
+            z-index: 5;
+        }
+
+        #secondHand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0% 0%;
+            background-image: url(./arrow.png);
+            background-size: cover;
+            /* Adjusts the background image to cover the entire div */
+            background-repeat: no-repeat;
+            /* Prevents the background image from repeating */
+            background-position: center;
+            /* Centers the background image */
+            width: 3px;
+            height: 43%;
+            transition: transform 0.5s cubic-bezier(0.42, 0, 0.58, 1);
+            animation: rotateSeconds 60s linear infinite;
+        }
+
+        @keyframes rotateSeconds {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #airplan {
+            width: 40px;
+            z-index: 5;
+            height: 40px;
+            position: absolute;
+            transform-origin: 0% 0%;
+            top: calc(50%);
+            left: calc(50%);
+            background-image: url(./air.png);
+            background-size: cover;
+            /* Adjusts the background image to cover the entire div */
+            background-repeat: no-repeat;
+            /* Prevents the background image from repeating */
+            background-position: center;
+            /* Centers the background image */
+            transition: transform 0.5s cubic-bezier(0.42, 0, 0.58, 1);
+            animation: moveAround 60s linear infinite;
+        }
+
+        @keyframes moveAround {
+            from {
+                transform: rotate(95deg) translate(400px) rotate(-140deg);
+            }
+
+            to {
+                transform: rotate(455deg) translate(400px) rotate(-140deg);
+            }
+        }
+
+        #stopButton {
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #c50000;
+            border-radius: 50%;
+            width: 250px;
+            height: 250px;
+            border: none;
+            color: white;
+            font-size: 60px;
+        }
+
+        #speed-up {
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: gray;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            border: none;
+            color: white;
+            font-size: 80px;
+            margin-left: 30px;
+            margin-right: 30px;
+            margin-top: 100px;
+        }
+
+        #speed-down {
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: green;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            border: none;
+            color: white;
+            font-size: 80px;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 100px;
+        }
+
+        .container-zone {
+            justify-content: center;
+            margin-top: 80px;
+            margin-left: 30px;
+            /* display: inline-flex; */
+        }
+
+        .button-zone {
+            justify-content: center;
+            display: flex;
+            align-content: center;
+            width: 100%;
+        }
+
+        .clock-zone {
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            align-content: center;
+        }
+
+        #userInput {
+            margin-top: 30px;
+            font-size: 30px;
+        }
+
+        .save-speed {
+            font-size: 30px;
+            color: white;
+            background-color: green;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .text-zone {
+            font-size: 30px;
+            justify-content: center;
+            margin-top: 30px;
+            display: inline-flex;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .one-field {
+            width: 50%;
+            font-size: 40px;
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            justify-content: center;
+            line-height: 2.0;
+        }
+
+        .text-window {
+            width: 120px;
+            height: 80px;
+            margin-left: 10px;
+            margin-right: 10px;
+            border: solid black 2px;
+            font-size: 40px;
+            border-radius: 10px;
+        }
+
+        .speed-number {
+            color: red;
+            font-weight: 600;
+            font-size: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-zone">
+        <div class="clock-zone">
+            <div id="clock">
+                <div id="center"></div>
+                <div id="secondHand">
+                </div>
+                <div id="airplan"></div>
+            </div>
+        </div>
+        <div class="text-zone">
+            <!-- <div id="output">
+                <span>Tốc độ quay kim hiện tại là <span class="speed-number">60</span> giây một vòng</span>
+            </div> -->
+            <div class="one-field">
+                <span>V:</span> <input type="number" id="speed" name="speed" value="40" class="text-window" min="0"
+                    maxlength="4" pattern="\d*" max="400" onkeyup="calculateSpeed()"> <span>m/s</span>
+            </div>
+            <div class="one-field">
+                <span>D:</span><input type="number" id="distance" value="2400" class="text-window" min="0" maxlength="4"
+                    pattern="\d*" max="8000" onkeyup="calculateSpeed()"><span>m</span>
+            </div>
+        </div>
+
+        <div class="button-zone">
+            <!-- <button id="speed-up" onclick="SpeedDown()">-</button> -->
+            <button id="stopButton">Dừng</button>
+            <!-- <button id="speed-down" onclick="SpeedUp()">+</button> -->
+        </div>
+        <div>
+</body>
+<script>
+    let isRotating = true;
+    const secondHand = document.getElementById('secondHand');
+    const stopButton = document.getElementById('stopButton');
+    const airplan = document.getElementById('airplan');
+    const tempSpeed = document.getElementById('speed').value;
+    const tempDistance = document.getElementById('distance').value;
+
+    var currentSpeed = tempDistance / tempSpeed;
+
+    stopButton.addEventListener('click', () => {
+        if (isRotating) {
+            secondHand.style.animationPlayState = 'paused';
+            airplan.style.animationPlayState = 'paused';
+            stopButton.textContent = 'Tiếp Tục';
+            stopButton.style.backgroundColor = "darkcyan";
+        } else {
+            secondHand.style.animationPlayState = 'running';
+            airplan.style.animationPlayState = 'running';
+            stopButton.textContent = 'Dừng';
+            stopButton.style.backgroundColor = "#c50000";
+        }
+        isRotating = !isRotating;
+    });
+
+    function calculateSpeed() {
+        const tempSpeed = document.getElementById('speed').value;
+        const tempDistance = document.getElementById('distance').value;
+        console.log("xxxxxxx", tempSpeed);
+
+        if (tempSpeed != 0) {
+            currentSpeed = tempDistance / tempSpeed;
+        }
+        SaveSpeed();
+    }
+
+    function SpeedUp() {
+        if (currentSpeed > 1) {
+            currentSpeed = currentSpeed - 1;
+        }
+        SaveSpeed();
+    }
+
+    function SpeedDown() {
+        currentSpeed = currentSpeed + 1;
+        SaveSpeed();
+    }
+
+    function SaveSpeed() {
+        var outputDiv = document.getElementById('output');
+        let currentState = secondHand.style.animationPlayState;
+
+        secondHand.style.animation = 'rotateSeconds ' + currentSpeed + 's linear infinite';
+        airplan.style.animation = 'moveAround ' + currentSpeed + 's linear infinite';
+        secondHand.style.animationPlayState = currentState;
+        airplan.style.animationPlayState = currentState;
+        //outputDiv.innerHTML = '<span>Tốc độ quay kim hiện tại là <span class="speed-number">' + currentSpeed + '</span> giây một vòng</span>';
+    }
+</script>
+
+
+</html>
