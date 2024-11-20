@@ -1,3 +1,4 @@
+
 let isRotating = true;
 const secondHand = document.getElementById('secondHand');
 const stopButton = document.getElementById('stopButton');
@@ -72,4 +73,4 @@ function speakNumbers() {
     }, interval);
 }
 
-window.onload(speakNumbers())
+window.onloadeddata(speakNumbers())
