@@ -40,3 +40,40 @@
             secondHand.style.animationPlayState = currentState;
             airplan.style.animationPlayState = currentState;
         }
+// test speak
+function speakNumbers() {
+            let number = 1;  // Start from 1
+            const interval = 2000;  // 2 seconds interval for slow speech
+
+            function speak() {
+                if (number <= 1000) {
+                    const utterance = new SpeechSynthesisUtterance(number.toString());
+                    utterance.lang = 'en-US';  // Set language (English)
+
+                    // Slow down the speech rate (normal is 1)
+                    utterance.pitch = 1;
+                    utterance.rate = 0.8;  // Slower rate
+                    utterance.volume = 1;  // Full volume
+
+                    window.speechSynthesis.speak(utterance);
+
+                    // Increment the number after the speech has finished
+                    number++;
+                } else {
+                    console.log("Finished speaking up to 1000.");
+                }
+            }
+
+            // Use setInterval to speak each number at regular intervals
+            const intervalID = setInterval(() => {
+                speak();
+                if (number > 1000) {
+                    clearInterval(intervalID);  // Stop when we reach 1000
+                }
+            }, interval);
+        }
+
+        // Automatically trigger the speaking when the page loads
+        window.onload = function() {
+            speakNumbers();
+        };
