@@ -3,11 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dia Cu Ly</title>
-    <style>
-        
-    </style>
+    <link rel="stylesheet" href="index.css"> <!-- Importing the external CSS file -->
 </head>
 
 <body>
@@ -15,15 +13,11 @@
         <div class="clock-zone">
             <div id="clock">
                 <div id="center"></div>
-                <div id="secondHand">
-                </div>
+                <div id="secondHand"></div>
                 <div id="airplan"></div>
             </div>
         </div>
         <div class="text-zone">
-            <!-- <div id="output">
-                <span>Tốc độ quay kim hiện tại là <span class="speed-number">60</span> giây một vòng</span>
-            </div> -->
             <div class="one-field">
                 <span>V:</span> <input type="number" id="speed" name="speed" value="40" class="text-window" min="0"
                     maxlength="4" pattern="\d*" max="400" onkeyup="calculateSpeed()"> <span>m/s</span>
@@ -35,71 +29,52 @@
         </div>
 
         <div class="button-zone">
-            <!-- <button id="speed-up" onclick="SpeedDown()">-</button> -->
             <button id="stopButton">Dừng</button>
-            <!-- <button id="speed-down" onclick="SpeedUp()">+</button> -->
         </div>
-        <div>
-</body>
-<script>
-    let isRotating = true;
-    const secondHand = document.getElementById('secondHand');
-    const stopButton = document.getElementById('stopButton');
-    const airplan = document.getElementById('airplan');
-    const tempSpeed = document.getElementById('speed').value;
-    const tempDistance = document.getElementById('distance').value;
+    </div>
 
-    var currentSpeed = tempDistance / tempSpeed;
-
-    stopButton.addEventListener('click', () => {
-        if (isRotating) {
-            secondHand.style.animationPlayState = 'paused';
-            airplan.style.animationPlayState = 'paused';
-            stopButton.textContent = 'Tiếp Tục';
-            stopButton.style.backgroundColor = "darkcyan";
-        } else {
-            secondHand.style.animationPlayState = 'running';
-            airplan.style.animationPlayState = 'running';
-            stopButton.textContent = 'Dừng';
-            stopButton.style.backgroundColor = "#c50000";
-        }
-        isRotating = !isRotating;
-    });
-
-    function calculateSpeed() {
+    <script>
+        let isRotating = true;
+        const secondHand = document.getElementById('secondHand');
+        const stopButton = document.getElementById('stopButton');
+        const airplan = document.getElementById('airplan');
         const tempSpeed = document.getElementById('speed').value;
         const tempDistance = document.getElementById('distance').value;
-        console.log("xxxxxxx", tempSpeed);
 
-        if (tempSpeed != 0) {
-            currentSpeed = tempDistance / tempSpeed;
+        let currentSpeed = tempDistance / tempSpeed;
+
+        stopButton.addEventListener('click', () => {
+            if (isRotating) {
+                secondHand.style.animationPlayState = 'paused';
+                airplan.style.animationPlayState = 'paused';
+                stopButton.textContent = 'Tiếp Tục';
+                stopButton.style.backgroundColor = "darkcyan";
+            } else {
+                secondHand.style.animationPlayState = 'running';
+                airplan.style.animationPlayState = 'running';
+                stopButton.textContent = 'Dừng';
+                stopButton.style.backgroundColor = "#c50000";
+            }
+            isRotating = !isRotating;
+        });
+
+        function calculateSpeed() {
+            const tempSpeed = document.getElementById('speed').value;
+            const tempDistance = document.getElementById('distance').value;
+
+            if (tempSpeed != 0) {
+                currentSpeed = tempDistance / tempSpeed;
+            }
+            SaveSpeed();
         }
-        SaveSpeed();
-    }
 
-    function SpeedUp() {
-        if (currentSpeed > 1) {
-            currentSpeed = currentSpeed - 1;
+        function SaveSpeed() {
+            let currentState = secondHand.style.animationPlayState;
+            secondHand.style.animation = 'rotateSeconds ' + currentSpeed + 's linear infinite';
+            airplan.style.animation = 'moveAround ' + currentSpeed + 's linear infinite';
+            secondHand.style.animationPlayState = currentState;
+            airplan.style.animationPlayState = currentState;
         }
-        SaveSpeed();
-    }
-
-    function SpeedDown() {
-        currentSpeed = currentSpeed + 1;
-        SaveSpeed();
-    }
-
-    function SaveSpeed() {
-        var outputDiv = document.getElementById('output');
-        let currentState = secondHand.style.animationPlayState;
-
-        secondHand.style.animation = 'rotateSeconds ' + currentSpeed + 's linear infinite';
-        airplan.style.animation = 'moveAround ' + currentSpeed + 's linear infinite';
-        secondHand.style.animationPlayState = currentState;
-        airplan.style.animationPlayState = currentState;
-        //outputDiv.innerHTML = '<span>Tốc độ quay kim hiện tại là <span class="speed-number">' + currentSpeed + '</span> giây một vòng</span>';
-    }
-</script>
-
-
+    </script>
+</body>
 </html>
