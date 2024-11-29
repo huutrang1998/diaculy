@@ -44,25 +44,32 @@
     </div>
 
     <script>
+        var secondHand = document.getElementById('secondHand');
+        var stopButton = document.getElementById('stopButton');
+        var airplan = document.getElementById('airplan');
+        var speedInput = document.getElementById('speed');
+        var distanceInput = document.getElementById('distance');
+        var roundSelect = document.getElementById('round');
+        function calculateSpeed() {
+            const speed = parseFloat(speedInput.value);
+            const distance = parseFloat(distanceInput.value);
+            console.log("xxxxxx", speed);
+            if (speed > 0) {
+                secondHand.style.animation = `rotateSeconds ${distance / speed}s linear infinite`; // Animation for second hand
+                airplan.style.animation = `moveAround ${distance / speed}s linear infinite`; // Animation for airplane
+                return distance / speed; // Calculates time for one full rotation (in seconds)
+            }
+            secondHand.style.animation = `rotateSeconds ${0}s linear infinite`; // Animation for second hand
+            airplan.style.animation = `moveAround ${0}s linear infinite`; // Animation for airplane
+            return 0;
+        }
+        var isRotating = true;
         document.addEventListener('DOMContentLoaded', function () {
-            let isRotating = true;
-            const secondHand = document.getElementById('secondHand');
-            const stopButton = document.getElementById('stopButton');
-            const airplan = document.getElementById('airplan');
-            const speedInput = document.getElementById('speed');
-            const distanceInput = document.getElementById('distance');
-            const roundSelect = document.getElementById('round');
+
             let currentRound = roundSelect.value;
 
             // Function to calculate the speed based on user inputs
-            function calculateSpeed() {
-                const speed = parseFloat(speedInput.value);
-                const distance = parseFloat(distanceInput.value);
-                if (speed > 0) {
-                    return distance / speed; // Calculates time for one full rotation (in seconds)
-                }
-                return 0;
-            }
+
 
             function getCurrentAngleFromTransform() {
                 const transform = window.getComputedStyle(secondHand).transform;
@@ -92,31 +99,6 @@
                 return angle >= 0 ? angle : 360 + angle;
             }
 
-            // Function to calculate the angle of the second hand based on time
-            // function calculateAngle() {
-            //     const timeForOneRotation = calculateSpeed(); // Time in seconds for one full rotation
-
-            //     if (timeForOneRotation === 0) {
-            //         return 0; // If no valid speed, return angle as 0
-            //     }
-
-            //     const currentTime = Date.now() / 1000; // Get current time in seconds
-            //     const elapsedTime = currentTime % timeForOneRotation; // Time elapsed in this cycle
-
-            //     const angle = (elapsedTime / timeForOneRotation) * 360; // Map elapsed time to angle (0 to 360)
-
-            //     return angle;
-            // }
-
-            function resetSecondHand() {
-                secondHand.style.animationPlayState = 'paused';
-                airplan.style.animationPlayState = 'paused';
-                stopButton.textContent = 'Tiếp Tục'; // "Resume"
-                stopButton.style.backgroundColor = "darkcyan";
-                isRotating = !isRotating;
-                // secondHand.style.animationPlayState = 'paused'; // Pause the animation
-                secondHand.style.transform = 'rotate(0deg)'; // Reset to 0 degrees (12 o'clock)
-            }
 
             let lastSpokenAngle = 60;  // Start from 60 degrees
             let isSpeaking = false;  // Flag to avoid repeated speaking for the same angle
@@ -178,17 +160,15 @@
                 secondHand.style.transform = `rotate(${angle}deg)`; // Rotate the second hand
                 applyAnimations(); // Update airplan and second hand animations based on speed
 
-                if (isRotating) {
-                    // announceQuarter(angle);
-                    requestAnimationFrame(update);
-                }
+                // if (isRotating) {
+                //     // announceQuarter(angle);
+                //     requestAnimationFrame(update);
+                // }
             }
 
             // Function to apply animations
             function applyAnimations() {
                 const speed = calculateSpeed();
-                secondHand.style.animation = `rotateSeconds ${speed}s linear infinite`; // Animation for second hand
-                airplan.style.animation = `moveAround ${speed}s linear infinite`; // Animation for airplane
             }
 
             // Start updating animations
@@ -198,7 +178,7 @@
             roundSelect.addEventListener('change', function () {
                 currentRound = roundSelect.value;
                 // Reset the second hand to 12 o'clock position when the round changes
-                resetSecondHand();
+                // resetSecondHand();
 
                 const speed = speedInput.value;
                 const distance = distanceInput.value;
