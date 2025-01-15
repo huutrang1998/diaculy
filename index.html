@@ -28,13 +28,11 @@
             </div>
             <div class="one-field">
                 <span>V:</span>
-                <input type="number" id="speed" value="40" class="text-window" min="0" maxlength="4" max="400"
-                    onkeyup="calculateSpeed()"> <span>m/s</span>
+                <input type="number" id="speed" value="40" class="text-window" min="0" maxlength="4" max="400"> <span>m/s</span>
             </div>
             <div class="one-field">
                 <span>D:</span>
-                <input type="number" id="distance" value="2400" class="text-window" min="0" maxlength="4" max="8000"
-                    onkeyup="calculateSpeed()"> <span>m</span>
+                <input type="number" id="distance" value="2400" class="text-window" min="0" maxlength="4" max="8000"> <span>m</span>
             </div>
         </div>
 
@@ -42,182 +40,7 @@
             <button id="stopButton">Dừng</button>
         </div>
     </div>
-
-    <script>
-        var secondHand = document.getElementById('secondHand');
-        var stopButton = document.getElementById('stopButton');
-        var airplan = document.getElementById('airplan');
-        var speedInput = document.getElementById('speed');
-        var distanceInput = document.getElementById('distance');
-        var roundSelect = document.getElementById('round');
-        function calculateSpeed() {
-            const speed = parseFloat(speedInput.value);
-            const distance = parseFloat(distanceInput.value);
-            console.log("xxxxxx", speed);
-            if (speed > 0) {
-                secondHand.style.animation = `rotateSeconds ${distance / speed}s linear infinite`; // Animation for second hand
-                airplan.style.animation = `moveAround ${distance / speed}s linear infinite`; // Animation for airplane
-                return distance / speed; // Calculates time for one full rotation (in seconds)
-            }
-            secondHand.style.animation = `rotateSeconds ${0}s linear infinite`; // Animation for second hand
-            airplan.style.animation = `moveAround ${0}s linear infinite`; // Animation for airplane
-            return 0;
-        }
-        var isRotating = true;
-        document.addEventListener('DOMContentLoaded', function () {
-
-            let currentRound = roundSelect.value;
-
-            // Function to calculate the speed based on user inputs
-
-
-            function getCurrentAngleFromTransform() {
-                const transform = window.getComputedStyle(secondHand).transform;
-
-                if (transform === 'none') {
-                    return 0; // If no transform is applied, assume the angle is 0 (12 o'clock position)
-                }
-
-                // Extract the matrix values from the transform string
-                const matrix = transform.match(/matrix\(([^)]+)\)/);
-
-                if (!matrix) {
-                    return 0; // If the matrix is not found, return 0
-                }
-
-                // Matrix values are separated by commas and look like: a, b, c, d, tx, ty
-                const values = matrix[1].split(',').map(val => parseFloat(val.trim()));
-
-                // Get 'a' (cos(θ)) and 'b' (sin(θ)) values
-                const a = values[0];
-                const b = values[1];
-
-                // Calculate the angle in radians and convert it to degrees
-                const angle = Math.atan2(b, a) * (180 / Math.PI);
-
-                // Normalize the angle to be between 0 and 360 degrees
-                return angle >= 0 ? angle : 360 + angle;
-            }
-
-
-            let lastSpokenAngle = 60;  // Start from 60 degrees
-            let isSpeaking = false;  // Flag to avoid repeated speaking for the same angle
-
-            function announceQuarter(angle) {
-                // Wrap the angle to a 0-360 range (for multiple rounds)
-                angle = angle % 360;
-
-                // Check if angle is close to 60° (within 5 degrees) for the first announcement of each round
-                if (!isSpeaking && Math.abs(angle - 60) <= 5) {
-                    // Start speaking at 60 degrees (or close to it)
-                    const message = `${angle.toFixed(0)}`;
-                    speak(message);
-                    lastSpokenAngle = angle; // Update the last spoken angle to 60° or current angle
-                    isSpeaking = true;  // Set flag to prevent repeated speaking
-                }
-
-                // Continue speaking every 15 degrees if the angle is less than 200 and within the current cycle
-                if (angle > lastSpokenAngle + 15 && angle <= 200) {
-                    const message = `${angle.toFixed(0)}`;
-                    speak(message);
-                    lastSpokenAngle = angle;  // Update the last spoken angle
-                }
-
-                // Stop speaking after the angle exceeds 200 degrees in each cycle
-                if (angle > 200) {
-                    isSpeaking = false;  // Reset speaking flag once angle exceeds 200
-                }
-            }
-
-            // Helper function to perform speech synthesis
-            function speak(message) {
-                if ('speechSynthesis' in window) {
-                    const utterance = new SpeechSynthesisUtterance(message);
-                    utterance.lang = 'vi-VN';
-
-                    // Find Vietnamese voice (if available)
-                    const voices = speechSynthesis.getVoices();
-                    const vietnameseVoice = voices.find(voice => voice.lang === 'vi-VN');
-                    if (vietnameseVoice) {
-                        utterance.voice = vietnameseVoice;
-                    }
-
-                    // Speak the message
-                    speechSynthesis.speak(utterance);
-                } else {
-                    alert('Speech synthesis is not supported in this browser.');
-                }
-            }
-
-            // Function to reset the second hand position to 0 degrees (12 o'clock)
-            function resetSecondHand() {
-                secondHand.style.animationPlayState = 'paused'; // Pause the animation
-                secondHand.style.transform = 'rotate(0deg)'; // Reset to 0 degrees (12 o'clock)
-            }
-
-            function update() {
-                const angle = getCurrentAngleFromTransform(); // Calculate the current angle of the second hand
-                secondHand.style.transform = `rotate(${angle}deg)`; // Rotate the second hand
-                applyAnimations(); // Update airplan and second hand animations based on speed
-
-                // if (isRotating) {
-                //     // announceQuarter(angle);
-                //     requestAnimationFrame(update);
-                // }
-            }
-
-            // Function to apply animations
-            function applyAnimations() {
-                const speed = calculateSpeed();
-            }
-
-            // Start updating animations
-            update();
-
-            // Handle round change and reset
-            roundSelect.addEventListener('change', function () {
-                currentRound = roundSelect.value;
-                // Reset the second hand to 12 o'clock position when the round changes
-                // resetSecondHand();
-
-                const speed = speedInput.value;
-                const distance = distanceInput.value;
-                const message = `Bạn đã chọn vòng ${currentRound}, tốc độ hiện tại là ${speed} mét trên giây và khoảng cách là ${distance} mét.`;
-
-                if ('speechSynthesis' in window) {
-                    const utterance = new SpeechSynthesisUtterance(message);
-                    utterance.lang = 'vi-VN';
-                    const voices = speechSynthesis.getVoices();
-                    const vietnameseVoice = voices.find(voice => voice.lang === 'vi-VN');
-                    if (vietnameseVoice) {
-                        utterance.voice = vietnameseVoice;
-                    }
-                    speechSynthesis.speak(utterance);
-                } else {
-                    alert('Speech synthesis is not supported in this browser.');
-                }
-                console.log("Selected Round: " + currentRound);
-            });
-
-            // Stop and resume rotation logic
-            stopButton.addEventListener('click', () => {
-                if (isRotating) {
-                    // Pause the second hand animation
-                    secondHand.style.animationPlayState = 'paused';
-                    airplan.style.animationPlayState = 'paused';
-                    stopButton.textContent = 'Tiếp Tục'; // "Resume"
-                    stopButton.style.backgroundColor = "darkcyan";
-                } else {
-                    // Resume the second hand animation
-                    secondHand.style.animationPlayState = 'running';
-                    airplan.style.animationPlayState = 'running';
-                    stopButton.textContent = 'Dừng'; // "Stop"
-                    stopButton.style.backgroundColor = "#c50000";
-                }
-                isRotating = !isRotating;
-            });
-        });
-    </script>
 </body>
+<script src="./index.js"></script>
 
 </html>
